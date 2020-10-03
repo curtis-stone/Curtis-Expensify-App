@@ -15,19 +15,19 @@ import getVisibleExpenses from "./selectors/expenses";
 
 const store = configureStore();
 
-store.dispatch(addExpense({ description: "water bill", amount: 4500 }));
-store.dispatch(addExpense({ description: "gas bill", createdAt: 1000 }));
-store.dispatch(addExpense({ description: "rent", amount: 4500 }));
+// store.dispatch(addExpense({ description: "water bill", amount: 4500 }));
+// store.dispatch(addExpense({ description: "gas bill", createdAt: 1000 }));
+// store.dispatch(addExpense({ description: "rent", amount: 4500 }));
 // store.dispatch(setTextFilter("water"));
 
 // setTimeout(() => {
 //     store.dispatch(setTextFilter("bill"));
 // }, 3000)
 
-const state = store.getState();
+// const state = store.getState();
 // ^ gives us access to the current filters and expenses on state to call with getVisibleExpenses in its arguments
-const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
-
+// const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
+// taken out so it can be done with application interaction instead of hard coding
 console.log(visibleExpenses);
 
 const jsx = (
