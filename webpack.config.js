@@ -20,7 +20,7 @@ module.exports = (env) => {
   return {
     entry: "./src/app.js", // tells webpack where to start
     output: {
-      path: path.join(__dirname, "public"),
+      path: path.join(__dirname, "public", "dist"),
       filename: "bundle.js",
     },
     module: {
@@ -70,6 +70,7 @@ module.exports = (env) => {
     devServer: {
       contentBase: path.join(__dirname, "public"),
       historyApiFallback: true, // handles routing through client side and tells dev-server to always serve index.html file for all unknown routes/ 404's
+      publicPath: '/dist/'
     }, // absolute path to where server can find our content
   };
   // module.exports is a node thing that exposes something (in this case a node object)
