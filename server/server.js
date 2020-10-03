@@ -1,9 +1,10 @@
 // IMPORTS
 const express = require('express'); // node way to import
 const app = express();
-const path = require('path')
-const publicPath = path.join(__dirname, '..', 'public')
-const port = process.env.Port || 3000
+const path = require('path');
+const publicPath = path.join(__dirname, '..', 'public');
+const port = process.env.PORT || 3000;
+
 // WHAT TO SERVE
 app.use(express.static(publicPath));
 // .static() = function that takes the path to the dicrectory as its argument
