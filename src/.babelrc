@@ -1,0 +1,13 @@
+// JSON file that takes all arguments we passed into command line before webpack i-
+// presets array
+{
+    "presets": [
+        "env",
+        "react"
+    ],
+    "plugins": [
+        "transform-class-properties",
+        "transform-object-rest-spread"
+    ]
+}
+// whenever project runs babel, these 2 presets will be used

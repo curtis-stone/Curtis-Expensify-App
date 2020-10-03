@@ -1,0 +1,26 @@
+// const add = (a, b) => a + b;
+// const generateGreeting = (name = 'Anonymous') => `Hello ${name}!`
+
+// test('should add two numbers', () => { 
+//     // test veguns w/ string argument w/ description and 2nd argument w/ function
+//     const result = add(3, 4);
+//     expect(result).toBe(7);
+//     // expect takes value we are asserting as its argument
+//     //toBe is the value we are expecting
+
+//     // if (result !==7) { 
+//     //     throw new Error(`You added 4 and 3. The result was ${result}. We expected 7`)
+//     // } // assertion creation. asserted something about a given value in the program
+//       // see assertion library in docs
+// }); 
+
+// // "yarn test -- --watch" in command line to recieve constant reflections on updates
+
+// test('Should return name', () => {
+//     const result = generateGreeting('Mike');
+//     expect(result).toBe('Hello Mike!');
+// })
+// test('Should generate greeting for no name', () => {
+//     const result = generateGreeting();
+//     expect(result).toBe('Hello Anonymous!')
+// })
