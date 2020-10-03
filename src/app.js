@@ -28,7 +28,7 @@ const store = configureStore();
 // ^ gives us access to the current filters and expenses on state to call with getVisibleExpenses in its arguments
 // const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
 // taken out so it can be done with application interaction instead of hard coding
-console.log(visibleExpenses);
+// console.log(visibleExpenses);
 
 const jsx = (
   <Provider store={store}> 
