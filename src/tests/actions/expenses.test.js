@@ -5,7 +5,8 @@ import {
   editExpense,
   setExpenses,
   startSetExpenses,
-  startRemoveExpense
+  startRemoveExpense,
+  startEditExpense,
 } from "../../actions/expenses";
 import expenses from "../fixtures/expenses";
 import database from "../../firebase/firebase";
@@ -17,15 +18,18 @@ const createMockStore = configureMockStore([thunk]); // middleware in arg
 
 beforeEach(() => {
   const expensesData = {};
-  database.ref('expenses').set(expensesData)
-})
+  database.ref("expenses").set(expensesData);
+});
 
 beforeEach((done) => {
   const expensesData = {};
   expenses.forEach(({ id, description, note, amount, createdAt }) => {
     expensesData[id] = { description, note, amount, createdAt };
   });
-  database.ref('expenses').set(expensesData).then(() => done());
+  database
+    .ref("expenses")
+    .set(expensesData)
+    .then(() => done());
 });
 
 test("should setup remove expense action object", () => {
@@ -38,22 +42,28 @@ test("should setup remove expense action object", () => {
 // toEqual() for objects & array testing/ comparisons for expect
 // toBe() for num's, strings, and boleans for expect
 
-test('should remove an expense from firebase correctly', (done) => { // done to tell jest it is async
+test("should remove an expense from firebase correctly", (done) => {
+  // done to tell jest it is async
   const store = createMockStore({}); // create mock store
   const id = expenses[2].id; // get id from expenses[2] to reuse its id
-  store.dispatch(startRemoveExpense({ id })).then(() => { // calls function on an id 
-    const actions = store.getActions(); // get actions 
-    expect(actions[0]).toEqual({ // only action available should be removeExpense
-      type: 'REMOVE_EXPENSE',
-      id: id
+  store
+    .dispatch(startRemoveExpense({ id }))
+    .then(() => {
+      // calls function on an id
+      const actions = store.getActions(); // get actions
+      expect(actions[0]).toEqual({
+        // only action available should be removeExpense
+        type: "REMOVE_EXPENSE",
+        id: id,
+      });
+      return database.ref(`expenses/${id}`).once("value"); // get the value once for the ref
+    })
+    .then((snapshot) => {
+      // pass snapshot arg to expect
+      expect(snapshot.val()).toBeFalsy; // snapshot should be null (or Falsy) when called on item that doesnt exists (was deleted in this case)
+      done(); // calls asnyc test to be finished
     });
-    return database.ref(`expenses/${id}`).once('value'); // get the value once for the ref
-  }).then((snapshot) => { // pass snapshot arg to expect
-    expect(snapshot.val()).toBeFalsy // snapshot should be null (or Falsy) when called on item that doesnt exists (was deleted in this case)
-    done(); // calls asnyc test to be finished
-  });
-  
-})
+});
 
 test("Should setup edit expense action object", () => {
   const action = editExpense("testID", { note: "test note" });
@@ -63,6 +73,25 @@ test("Should setup edit expense action object", () => {
     updates: {
       note: "test note",
     },
+  });
+});
+
+test("Should edit expense in firebase correctly", (done) => {
+  const store = createMockStore({});
+  const id = expenses[0].id;
+  const updates = { amount: 21045 };
+  store.dispatch(startEditExpense(id, updates)).then(() => {
+    // because the promise was returned in expense.js (startEditExpense), i can add .then call
+    const actions = store.getActions();
+    expect(actions[0]).toEqual({
+      type: "EDIT_EXPENSE",
+      id,
+      updates,
+    });
+    return database.ref(`expenses/${id}`).once("value");
+  }).then((snapshot) => {
+    expect(snapshot.val().amount).toBe(updates.amount);
+    done();
   });
 });
 
@@ -133,27 +162,27 @@ test("should add expense with defaults to database and store", (done) => {
   done();
 });
 
-test('Should set up set expense data action object with data', () => {
-  const action = setExpenses(expenses)
+test("Should set up set expense data action object with data", () => {
+  const action = setExpenses(expenses);
   expect(action).toEqual({
-    type: 'SET_EXPENSES',
-    expenses: expenses
-  })
-})
+    type: "SET_EXPENSES",
+    expenses: expenses,
+  });
+});
 
-test('Should fetch the expenses from firebase', (done) => {
+test("Should fetch the expenses from firebase", (done) => {
   const store = createMockStore({});
-  store.dispatch(startSetExpenses()).then(() => { // grabs dummy firebase database data set up above
+  store.dispatch(startSetExpenses()).then(() => {
+    // grabs dummy firebase database data set up above
     const actions = store.getActions();
 
     expect(actions[0]).toEqual({
-      type: 'SET_EXPENSES',
-      expenses // seed data from fixtures file is what should come back
+      type: "SET_EXPENSES",
+      expenses, // seed data from fixtures file is what should come back
     });
     done();
-  }); 
+  });
 });
-
 
 // test("Should setup addExpense object w/ default values", () => {
 //   const action = addExpense();
