@@ -27,6 +27,8 @@ const expensesReducer = (state = expensesReducerDefaultState, action) => {
           return expense;
         }
       });
+      case "SET_EXPENSES":
+        return action.expenses; // action object already has expneses on it
     default:
       return state;
   }

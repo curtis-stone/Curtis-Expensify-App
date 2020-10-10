@@ -45,7 +45,7 @@ export { firebase, database as default };
 // })
 // ^ PUSHES INFO TO DATABASE
 
-//
+// PARSE INTO AN ARRAY
 // database.ref('expenses')
 // .once('value')
 // .then((snapshot) => {

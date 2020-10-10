@@ -49,3 +49,28 @@ export const editExpense = (id, updates) => ({
   id,
   updates,
 });
+
+// SET EXPENSES
+export const setExpenses = (expenses) => ({
+    type: 'SET_EXPENSES',
+    expenses
+});
+
+// FETCHES EXPENSES DATA FROM FIREBASE!!! >:^D
+export const startSetExpenses = () => {
+  return (dispatch) => {   // (dispatch) gives access to dispatch();
+    return database.ref('expenses').once('value').then((snapshot) => { 
+      // ^ gets all info from firebase database w/ 'expenses' ref and does something with it (once)
+      const expenses = [];
+
+      snapshot.forEach((childSnapshot) => {
+            expenses.push({
+                id: childSnapshot.key, // .key method to get access to firebase's random id
+                ...childSnapshot.val() // spread out whatever comes back from childsnapshot
+            });
+          }); // after forEach, now have access to the built up expenses array
+
+          dispatch(setExpenses(expenses)); // expenses = array of expenses above
+        }); // .forEach() creates child snapshots for each 
+      };
+    };

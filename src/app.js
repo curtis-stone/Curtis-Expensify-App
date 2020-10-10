@@ -11,7 +11,7 @@ import './firebase/firebase'
 
 //Redux imports
 import configureStore from "./store/configure-store";
-import { addExpense } from "./actions/expenses";
+import { startSetExpenses } from "./actions/expenses";
 import { setTextFilter } from "./actions/filters";
 import getVisibleExpenses from "./selectors/expenses";
 
@@ -39,8 +39,13 @@ const jsx = (
 );
 
 // Provider component must have a prop that points to your redux store
+ReactDOM.render(<p>Loading...</p>, document.getElementById("app"));
 
-ReactDOM.render(jsx, document.getElementById("app"));
+store.dispatch(startSetExpenses()).then(() => {
+  ReactDOM.render(jsx, document.getElementById("app"));
+}) // setstartExpenses is dispatch to set expenses values from firebase, after they are set,
+   // the page will render
+
 // yarn add moment@2.18.1 react-dates@12.7.0 react-addons-shallow-compare@15.6.0
 // react-addons-shallow-compare@15.6.0 = a utility used by react-dates so it IS needed, 
 // react-dates is not updated to not require this dependency

@@ -3,6 +3,8 @@ import {
   addExpense,
   removeExpense,
   editExpense,
+  setExpenses,
+  startSetExpenses
 } from "../../actions/expenses";
 import expenses from "../fixtures/expenses";
 import database from "../../firebase/firebase";
@@ -11,6 +13,11 @@ import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 const createMockStore = configureMockStore([thunk]); // middleware in arg
+
+beforeEach(() => {
+  const expensesData = {};
+  database.ref('expenses').set(expensesData)
+})
 
 beforeEach((done) => {
   const expensesData = {};
@@ -106,6 +113,27 @@ test("should add expense with defaults to database and store", (done) => {
       expect(snapshot.val()).toEqual(expenseDefaults); // async for firebase interaction
     });
   done();
+});
+
+test('Should set up set expense data action object with data', () => {
+  const action = setExpenses(expenses)
+  expect(action).toEqual({
+    type: 'SET_EXPENSES',
+    expenses: expenses
+  })
+})
+
+test('Should fetch the expenses from firebase', (done) => {
+  const store = createMockStore({});
+  store.dispatch(startSetExpenses()).then(() => { // grabs dummy firebase database data set up above
+    const actions = store.getActions();
+
+    expect(actions[0]).toEqual({
+      type: 'SET_EXPENSES',
+      expenses // seed data from fixtures file is what should come back
+    });
+    done();
+  }); 
 });
 
 // test("Should setup addExpense object w/ default values", () => {
