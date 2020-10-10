@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { editExpense, removeExpense } from "../actions/expenses";
+import { editExpense, startRemoveExpense } from "../actions/expenses";
 
 import ExpenseForm from "./ExpenseForm";
 
@@ -10,7 +10,7 @@ export class EditPage extends React.Component {
     this.props.history.push("/");
   };
   onRemove = () => {
-    this.props.removeExpense({ id: this.props.expense.id });
+    this.props.startRemoveExpense({ id: this.props.expense.id });
     this.props.history.push("/");
   };
 
@@ -26,7 +26,7 @@ export class EditPage extends React.Component {
 
 const mapDispatchToProps = (dispatch, props) => ({
   editExpense: (id, expense) => dispatch(editExpense(id, expense)),
-  removeExpense: (expense) => dispatch(removeExpense(expense)) // see enzyme docs for props syntax
+  startRemoveExpense: (expense) => dispatch(startRemoveExpense(expense)) // see enzyme docs for props syntax
 }); // for tests
 
 const mapStateToProps = (state, props) => {

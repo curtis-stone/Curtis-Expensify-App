@@ -4,7 +4,8 @@ import {
   removeExpense,
   editExpense,
   setExpenses,
-  startSetExpenses
+  startSetExpenses,
+  startRemoveExpense
 } from "../../actions/expenses";
 import expenses from "../fixtures/expenses";
 import database from "../../firebase/firebase";
@@ -36,6 +37,23 @@ test("should setup remove expense action object", () => {
 });
 // toEqual() for objects & array testing/ comparisons for expect
 // toBe() for num's, strings, and boleans for expect
+
+test('should remove an expense from firebase correctly', (done) => { // done to tell jest it is async
+  const store = createMockStore({}); // create mock store
+  const id = expenses[2].id; // get id from expenses[2] to reuse its id
+  store.dispatch(startRemoveExpense({ id })).then(() => { // calls function on an id 
+    const actions = store.getActions(); // get actions 
+    expect(actions[0]).toEqual({ // only action available should be removeExpense
+      type: 'REMOVE_EXPENSE',
+      id: id
+    });
+    return database.ref(`expenses/${id}`).once('value'); // get the value once for the ref
+  }).then((snapshot) => { // pass snapshot arg to expect
+    expect(snapshot.val()).toBeFalsy // snapshot should be null (or Falsy) when called on item that doesnt exists (was deleted in this case)
+    done(); // calls asnyc test to be finished
+  });
+  
+})
 
 test("Should setup edit expense action object", () => {
   const action = editExpense("testID", { note: "test note" });
@@ -135,6 +153,7 @@ test('Should fetch the expenses from firebase', (done) => {
     done();
   }); 
 });
+
 
 // test("Should setup addExpense object w/ default values", () => {
 //   const action = addExpense();
