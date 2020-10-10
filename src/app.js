@@ -5,14 +5,14 @@ import { Provider } from "react-redux";
 import "normalize.css/normalize.css"; // this css reset browser css base and allows styles to work in cross-browser settings!
 import "./styles/styles.scss";
 import "react-dates/lib/css/_datepicker.css";
-import AppRouter from "./routers/AppRouter";
-import './firebase/firebase'
+import AppRouter, { history } from "./routers/AppRouter";
+import { firebase } from './firebase/firebase';
 
 
 //Redux imports
 import configureStore from "./store/configure-store";
 import { startSetExpenses } from "./actions/expenses";
-import { setTextFilter } from "./actions/filters";
+import { login, logout } from "./actions/auth";
 import getVisibleExpenses from "./selectors/expenses";
 
 const store = configureStore();
@@ -38,13 +38,34 @@ const jsx = (
   </Provider>
 );
 
+let hasRendered = false
+
+const renderApp = () => {
+  if (!hasRendered) { // if we have not rendered already, do this...
+    ReactDOM.render(jsx, document.getElementById("app"));
+    hasRendered = true
+  }
+}
 // Provider component must have a prop that points to your redux store
 ReactDOM.render(<p>Loading...</p>, document.getElementById("app"));
 
-store.dispatch(startSetExpenses()).then(() => {
-  ReactDOM.render(jsx, document.getElementById("app"));
-}) // setstartExpenses is dispatch to set expenses values from firebase, after they are set,
-   // the page will render
+
+firebase.auth().onAuthStateChanged((user) => { // takes callback function and runs it when auth state is changed
+  if (user) {
+    store.dispatch(login(user.uid));
+    store.dispatch(startSetExpenses()).then(() => {
+     renderApp();
+     if (history.location.pathname === '/') { // ONLY if user is on login page ('/'), then redirect to dashboard
+       history.push('/dashboard')
+     }
+    }) // setstartExpenses is dispatch to set expenses values from firebase, after they are set,
+       // the page will render
+  } else {
+    store.dispatch(logout());
+    renderApp();
+    history.push('/')
+  }
+}) // runs every time auth state changes
 
 // yarn add moment@2.18.1 react-dates@12.7.0 react-addons-shallow-compare@15.6.0
 // react-addons-shallow-compare@15.6.0 = a utility used by react-dates so it IS needed, 
