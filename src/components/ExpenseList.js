@@ -1,27 +1,38 @@
 import React from "react";
 import { connect } from "react-redux";
 import ExpenseListItem from "./ExpenseListItem";
-import selectExpenses from '../selectors/expenses'
+import selectExpenses from "../selectors/expenses";
 
-export const ExpenseList = (props) => ( // exported for testing w/o store connection
-  <div>
+export const ExpenseList = (
+  props // exported for testing w/o store connection
+) => (
+  <div className="content-container">
+    <div className="list-header">
+      <div className="show-for-mobile">Expenses</div>
+      <div className="show-for-desktop">Expense</div>
+      <div className="show-for-desktop">Amount</div>
+    </div>
+    <div className="list-body">
     {props.expenses.length === 0 ? (
-      <p>No Expenses</p>
+      <div className="list-item--message">
+        <span>No expenses</span>
+      </div>
     ) : (
       props.expenses.map((expense) => {
         // expenses prop from mapStateToProps, passes down its values to the
         // ExpenseListItem component!
-        return <ExpenseListItem key = {expense.id} {...expense} />; // spread operator to get all properties off
+        return <ExpenseListItem key={expense.id} {...expense} />; // spread operator to get all properties off
         // the expense object
         // don't forget the key prop (should get an error saying this in console)
       })
-    )};
+    )}
+    </div>
   </div>
 );
 
 const mapStateToProps = (state) => {
   return {
-    expenses: selectExpenses(state.expenses, state.filters)
+    expenses: selectExpenses(state.expenses, state.filters),
     // whatever is returned from our selector function in selector's folder will show on screen
     // primarily for filter implementation
   };

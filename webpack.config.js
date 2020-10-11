@@ -29,7 +29,7 @@ module.exports = (env) => {
 
   console.log("env:", env); // logs env to console to say if we are in development or productions
   return {
-    entry: "./src/app.js", // tells webpack where to start
+    entry: ["babel-polyfill", "./src/app.js"], // tells webpack where to start // pollyfill to have jsx run on older browsers
     output: {
       path: path.join(__dirname, "public", "dist"),
       filename: "bundle.js",

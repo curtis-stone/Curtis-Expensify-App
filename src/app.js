@@ -11,6 +11,7 @@ import { firebase } from './firebase/firebase';
 
 //Redux imports
 import configureStore from "./store/configure-store";
+import LoadingPage from './components/LoadingPage'
 import { startSetExpenses } from "./actions/expenses";
 import { login, logout } from "./actions/auth";
 import getVisibleExpenses from "./selectors/expenses";
@@ -47,7 +48,7 @@ const renderApp = () => {
   }
 }
 // Provider component must have a prop that points to your redux store
-ReactDOM.render(<p>Loading...</p>, document.getElementById("app"));
+ReactDOM.render(<LoadingPage />, document.getElementById("app"));
 
 
 firebase.auth().onAuthStateChanged((user) => { // takes callback function and runs it when auth state is changed

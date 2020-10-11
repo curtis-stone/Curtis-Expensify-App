@@ -1,0 +1,13 @@
+.form {
+    display: flex; // top and bottom
+    flex-direction: column;
+   > * { // targets all direct children of form
+       margin-bottom: $medium;
+   }
+}
+
+.form__error {
+    margin: 0 0 $medium 0;
+    font-style: italic;
+    font-weight: 500;
+}

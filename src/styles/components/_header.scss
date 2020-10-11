@@ -1,0 +1,19 @@
+.header {
+    background-color: $dark-blue;
+}
+
+.header__content {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: $small 0
+}
+
+.header__title {
+    color: white;
+    text-decoration: none; // clears underline on link
+    h1 { // targets all h1's in "header__title"
+        margin: 0;
+    }
+}
+
